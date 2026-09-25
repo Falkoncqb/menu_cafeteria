@@ -243,6 +243,7 @@ body {
   top: 0;
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -609,26 +610,39 @@ body {
   justify-content: center;
   padding: 0 1.5rem;
   pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.demo-notice-bar.dismissing {
+  opacity: 0;
+  transform: translateY(18px) scale(0.96);
+  pointer-events: none;
+}
+
+.demo-notice-bar.dismissed {
+  display: none !important;
 }
 
 .demo-notice-content {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: rgba(18, 17, 16, 0.9);
+  background: rgba(18, 17, 16, 0.92);
   color: #ffffff;
-  padding: 0.45rem 1.15rem;
+  padding: 0.45rem 0.65rem 0.45rem 1.15rem;
   border-radius: 999px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   pointer-events: auto;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   animation: notice-pulse 3s infinite ease-in-out;
+  max-width: 95vw;
 }
 
 @keyframes notice-pulse {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.015); box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3); }
+  50% { transform: scale(1.012); box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3); }
 }
 
 .demo-notice-badge {
@@ -641,12 +655,46 @@ body {
   padding: 0.2rem 0.55rem;
   border-radius: 999px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .demo-notice-text {
   font-size: 0.75rem;
   font-weight: 500;
   color: #f0ebe4;
+  line-height: 1.3;
+}
+
+.demo-notice-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.25rem;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.demo-notice-close-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.08);
+}
+
+.demo-notice-close-btn:active {
+  transform: scale(0.92);
+}
+
+.demo-notice-close-btn svg {
+  display: block;
 }
 
 /* ==========================================================================
@@ -923,24 +971,391 @@ body {
   font-size: 1.1rem;
 }
 
-/* Responsive */
+/* ==========================================================================
+   OPTIMIZACIÓN RESPONSIVA Y VISUALIZACIÓN EN MÓVIL
+   ========================================================================== */
+
+/* Tablets y pantallas medianas */
 @media (max-width: 1100px) {
   .global-header, .global-footer, .section-content {
     padding-left: 2rem;
     padding-right: 2rem;
   }
+  .menu-column {
+    max-width: 520px;
+  }
 }
 
-@media (max-width: 868px) {
-  .global-header, .global-footer, .section-content {
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+/* Dispositivos Móviles (smartphones en portrait y landscape) */
+@media (max-width: 768px) {
+  /* Header compacto con safe-area para notch */
+  .global-header {
+    padding: 0.5rem 0.85rem;
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+    gap: 0.5rem;
   }
-  .demo-notice-bar {
-    bottom: 3.2rem;
+
+  .brand-title {
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
   }
-  .demo-notice-content {
-    border-radius: 12px;
+
+  .brand-tag {
+    font-size: 0.52rem;
+    letter-spacing: 0.14em;
+  }
+
+  .section-nav {
+    padding: 0.2rem 0.25rem;
+    gap: 0.25rem;
+  }
+
+  .nav-pill {
+    font-size: 0.62rem;
+    padding: 0.35rem 0.6rem;
+    letter-spacing: 0.03em;
+  }
+
+  .admin-open-btn {
+    padding: 0.38rem 0.75rem;
     font-size: 0.7rem;
+    gap: 0.35rem;
+  }
+
+  /* Overlay de fondo en móvil: asegura contraste total y legibilidad sobre el video */
+  .section-bg-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.88) 0%,
+      rgba(255, 255, 255, 0.76) 45%,
+      rgba(255, 255, 255, 0.88) 100%
+    );
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  /* Contenido centrado y con márgenes limpios */
+  .section-content {
+    padding: 4.2rem 0.85rem 3.8rem;
+    padding-bottom: max(3.8rem, calc(2.8rem + env(safe-area-inset-bottom)));
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu-column {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  /* Encabezado de la carta en móvil */
+  .menu-intro {
+    padding: 0.55rem 0.85rem;
+    margin-bottom: 0.55rem;
+    border-radius: 12px;
+  }
+
+  .menu-kicker {
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+  }
+
+  .menu-heading {
+    font-size: 1.45rem;
+    margin: 0.1rem 0;
+  }
+
+  .menu-desc {
+    font-size: 0.74rem;
+    line-height: 1.25;
+  }
+
+  /* Lista de productos compacta y táctil */
+  .products-list {
+    gap: 0.45rem;
+    min-height: auto;
+  }
+
+  .product-item {
+    padding: 0.55rem 0.85rem;
+    gap: 0.65rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  }
+
+  .product-bar {
+    width: 3px;
+    height: 30px;
+  }
+
+  /* Transformación sutil que no se desborda en pantallas angostas */
+  .product-item.revealed.active {
+    transform: translateY(0) translateX(4px) scale(1.01);
+  }
+
+  .product-item.revealed.active .product-bar {
+    height: 38px;
+  }
+
+  .product-name {
+    font-size: 0.95rem;
+  }
+
+  .product-price {
+    font-size: 0.92rem;
+  }
+
+  .dots-leader {
+    margin: 0 0.45rem;
+    min-width: 12px;
+  }
+
+  .product-note {
+    font-size: 0.72rem;
+    line-height: 1.22;
+  }
+
+  /* Tarjeta final del perrito */
+  .final-dog-card {
+    padding: 0.6rem 0.85rem;
+    gap: 0.65rem;
+    margin-top: 0.45rem;
+    border-radius: 10px;
+  }
+
+  .dog-badge {
+    font-size: 1.4rem;
+  }
+
+  .dog-info strong {
+    font-size: 0.8rem;
+  }
+
+  .dog-info span {
+    font-size: 0.68rem;
+    line-height: 1.2;
+  }
+
+  .section-tracker-bar {
+    margin-top: 0.65rem;
+    height: 3px;
+  }
+
+  /* Aviso flotante inferior con opción de cierre */
+  .demo-notice-bar {
+    bottom: 2.3rem;
+    padding: 0 0.75rem;
+  }
+
+  .demo-notice-content {
+    padding: 0.4rem 0.55rem 0.4rem 0.8rem;
+    gap: 0.55rem;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  }
+
+  .demo-notice-badge {
+    font-size: 0.55rem;
+    padding: 0.15rem 0.45rem;
+  }
+
+  .demo-notice-text {
+    font-size: 0.68rem;
+    line-height: 1.25;
+  }
+
+  .demo-notice-close-btn {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+  }
+
+  /* Footer inferior adaptado */
+  .global-footer {
+    padding: 0.35rem 0.85rem;
+    padding-bottom: max(0.35rem, env(safe-area-inset-bottom));
+    font-size: 0.68rem;
+  }
+
+  .footer-extra {
+    display: none;
+  }
+
+  /* Modal de administración adaptado a pantallas táctiles */
+  .admin-modal-backdrop {
+    padding: 0.6rem;
+  }
+
+  .admin-modal {
+    width: 100%;
+    max-height: 92vh;
+    max-height: 92dvh;
+    border-radius: 16px;
+  }
+
+  .admin-modal-header {
+    padding: 1rem 1.15rem 0.75rem;
+  }
+
+  .admin-modal-title {
+    font-size: 1.18rem;
+  }
+
+  .admin-modal-sub {
+    font-size: 0.72rem;
+  }
+
+  .admin-section-tabs {
+    padding: 0.5rem 1rem;
+    gap: 0.35rem;
+  }
+
+  .admin-tab-btn {
+    font-size: 0.68rem;
+    padding: 0.45rem 0.5rem;
+  }
+
+  .admin-products-editor {
+    padding: 0.85rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .admin-item-card {
+    padding: 0.75rem 0.85rem;
+    gap: 0.5rem;
+  }
+
+  .admin-input {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.55rem;
+  }
+
+  .admin-actions-bar {
+    padding: 0.65rem 1rem;
+    gap: 0.5rem;
+  }
+
+  .btn-action {
+    font-size: 0.72rem;
+    padding: 0.45rem 0.75rem;
+  }
+
+  .admin-demo-notice {
+    margin: 0.5rem 1rem 0.85rem;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.7rem;
+  }
+}
+
+/* Pantallas extra pequeñas (smartphones angostos < 480px) */
+@media (max-width: 480px) {
+  .global-header {
+    padding-left: 0.55rem;
+    padding-right: 0.55rem;
+    gap: 0.35rem;
+  }
+
+  .brand-tag {
+    display: none;
+  }
+
+  .brand-title {
+    font-size: 0.95rem;
+  }
+
+  .nav-pill {
+    padding: 0.3rem 0.48rem;
+    font-size: 0.58rem;
+  }
+
+  .admin-btn-label {
+    display: none;
+  }
+
+  .admin-open-btn {
+    padding: 0.42rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    justify-content: center;
+  }
+
+  .admin-item-row {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .admin-item-num {
+    min-width: 18px;
+    font-size: 0.7rem;
+  }
+
+  .input-name {
+    flex: 1 1 55%;
+  }
+
+  .input-price {
+    flex: 1 1 25%;
+  }
+
+  .demo-notice-content {
+    align-items: flex-start;
+  }
+
+  .demo-notice-badge {
+    margin-top: 0.15rem;
+  }
+
+  .demo-notice-close-btn {
+    align-self: center;
+  }
+}
+
+/* Optimización para teléfonos con baja altura o en orientación horizontal */
+@media (max-height: 720px) and (max-width: 768px) {
+  .section-content {
+    padding-top: 3.5rem;
+    padding-bottom: 2.8rem;
+  }
+
+  .menu-intro {
+    padding: 0.35rem 0.75rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .menu-heading {
+    font-size: 1.25rem;
+  }
+
+  .menu-desc {
+    display: none; /* Ahorra espacio vertical para mostrar todos los productos perfectamente */
+  }
+
+  .products-list {
+    gap: 0.32rem;
+  }
+
+  .product-item {
+    padding: 0.42rem 0.7rem;
+  }
+
+  .product-name, .product-price {
+    font-size: 0.88rem;
+  }
+
+  .product-note {
+    font-size: 0.68rem;
+  }
+
+  .product-bar {
+    height: 24px;
+  }
+
+  .product-item.revealed.active .product-bar {
+    height: 32px;
+  }
+
+  .final-dog-card {
+    padding: 0.45rem 0.7rem;
+    margin-top: 0.3rem;
   }
 }

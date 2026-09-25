@@ -84,6 +84,10 @@
   const addProductBtn = document.getElementById('add-product-btn');
   const resetDefaultsBtn = document.getElementById('reset-defaults-btn');
 
+  // Elementos Aviso de Demostración
+  const demoNoticeBar = document.getElementById('demoNoticeBar');
+  const closeNoticeBtn = document.getElementById('close-notice-btn');
+
   let activeAdminSection = 'section1';
 
   // Arrays de frames
@@ -383,6 +387,33 @@
   });
 
   // ==========================================================================
+  // AVISO INFORMATIVO DE DEMOSTRACIÓN (OPCIÓN DE CIERRE)
+  // ==========================================================================
+  function initNoticeBar() {
+    if (!demoNoticeBar) return;
+
+    try {
+      if (sessionStorage.getItem('cafeteria_notice_dismissed') === '1') {
+        demoNoticeBar.classList.add('dismissed');
+      }
+    } catch (e) {}
+
+    if (closeNoticeBtn) {
+      closeNoticeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        demoNoticeBar.classList.add('dismissing');
+        setTimeout(() => {
+          demoNoticeBar.classList.add('dismissed');
+          demoNoticeBar.classList.remove('dismissing');
+          try {
+            sessionStorage.setItem('cafeteria_notice_dismissed', '1');
+          } catch (e) {}
+        }, 280);
+      });
+    }
+  }
+
+  // ==========================================================================
   // SCROLL-DRIVEN SYNCHRONIZATION
   // ==========================================================================
   function onScroll() {
@@ -494,6 +525,7 @@
     canvasSweets.height = CANVAS_HEIGHT;
 
     renderLiveCards();
+    initNoticeBar();
     preloadAllFrames();
     onScroll();
     requestAnimationFrame(renderLoop);
